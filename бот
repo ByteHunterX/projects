@@ -1,0 +1,38 @@
+import logging
+import asyncio
+from aiogram import Bot, Dispatcher, types
+from aiogram.filters import Command
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+
+API_TOKEN = 'токен'
+
+logging.basicConfig(level=logging.INFO)
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher()
+
+kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="Помощь")],
+        [KeyboardButton(text="О боте")],
+    ],
+    resize_keyboard=True
+)
+
+@dp.message(Command("start"))
+async def start_cmd(message: types.Message):
+    await message.answer("Привет! Вот кнопки 👇", reply_markup=kb)
+
+@dp.message()
+async def handle_buttons(message: types.Message):
+    if message.text == "Помощь":
+        await message.answer("пиши любые вопросы а я отвечу")#ЭТИ СЛОВА НЕ НЕСУТ СМЫСЛА ТАК КАК В ЭТОМ БОТЕ ЕСТЬ ПОДДЕРЖКА ТОЛЬКО 2 слов и кнопки  
+    elif message.text == "О боте":
+        await message.answer("Я бот на aiogram 3.x, созданный Али 💪")
+    else:
+        await message.answer(f"Не понял тебя, попробуй нажать кнопку 😊")
+
+async def main():
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
